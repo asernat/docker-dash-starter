@@ -5,6 +5,8 @@ from dash.dependencies import Input, Output
 import requests
 import json
 from loguru import logger
+import os
+
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
@@ -13,17 +15,20 @@ app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 server = app.server
 
 # PREDICTION API URL 
-api_url = "http://3.85.13.36:8001/api/v1/predict"
+api_url = os.getenv('API_URL')
+api_url = "http://{}:8001/api/v1/predict".format(api_url)
 
 # Layout in HTML
 app.layout = html.Div(
     [
     html.H6("Ingrese la información del cliente:"),
     html.Div(["Número de meses inactivo en los los últimos 12 meses: ",
-              dcc.Dropdown(id='inactivo', value='1', options=['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12' ])]),
+              dcc.Dropdown(id='inactivo', value='1', 
+                           options=['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12' ])]),
     html.Br(),
     html.Div(["Número de servicios toamdos por el cliente: ",
-              dcc.Dropdown(id='servicios', value='1', options=['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'])]),
+              dcc.Dropdown(id='servicios', value='1', 
+                           options=['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'])]),
     html.Br(),
     html.Div(["Valor total de las transacciones: ",
               dcc.Input(id='transac', value='10', type='number')]),
@@ -31,9 +36,7 @@ app.layout = html.Div(
     html.Div(["Número de transacciones: ",
               dcc.Input(id='num_transac', value='10')]),
     html.Br(),
-    
     html.H6(html.Div(id='resultado')),
-    
     ]
 )
 
